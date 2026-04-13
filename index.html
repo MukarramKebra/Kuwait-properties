@@ -6,92 +6,116 @@
 <title>Kuwait Property Finder</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-body { background: #0a0a0a; color: #fff; }
-.hero { background: linear-gradient(135deg, #0a2a1f 0%, #0a0a0a 60%); padding: 2rem 1rem 1.5rem; border-bottom: 1px solid #1a1a1a; }
-.app { max-width: 860px; margin: 0 auto; }
+body { background: #f5f0e8; color: #1a1a1a; }
+.hero {
+  background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1400&q=80') center/cover no-repeat;
+  padding: 2rem 1rem 2rem; border-bottom: 1px solid #e0d8cc;
+}
+.app { max-width: 880px; margin: 0 auto; }
 .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
 .brand { display: flex; align-items: center; gap: 10px; }
-.logo { width: 38px; height: 38px; background: #1D9E75; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
-.logo svg { width: 20px; height: 20px; fill: white; }
-.brand-text h1 { font-size: 17px; font-weight: 600; }
-.brand-text p { font-size: 12px; color: #888; }
-.list-btn { background: #1D9E75; color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; font-weight: 500; }
-.list-btn:hover { background: #17856a; }
-.search-bar { background: #111; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-.search-bar textarea { width: 100%; border: none; outline: none; resize: none; font-size: 15px; color: #fff; background: transparent; min-height: 48px; }
-.search-bar textarea::placeholder { color: #444; }
+.logo { width: 40px; height: 40px; background: #1D9E75; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.logo svg { width: 22px; height: 22px; fill: white; }
+.brand-text h1 { font-size: 18px; font-weight: 700; color: #fff; }
+.brand-text p { font-size: 12px; color: #ccc; }
+.list-btn { background: #1D9E75; color: white; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.list-btn:hover { background: #178a64; }
+.price-tag { font-size: 11px; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 10px; }
+.search-bar { background: rgba(255,255,255,0.95); border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.search-bar textarea { width: 100%; border: none; outline: none; resize: none; font-size: 15px; color: #1a1a1a; background: transparent; min-height: 48px; }
+.search-bar textarea::placeholder { color: #aaa; }
 .search-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px; }
 .quick-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.chip { font-size: 12px; padding: 4px 10px; border: 1px solid #2a2a2a; border-radius: 20px; cursor: pointer; color: #888; background: transparent; white-space: nowrap; transition: all 0.15s; }
+.chip { font-size: 12px; padding: 4px 10px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; color: #666; background: white; white-space: nowrap; transition: all 0.15s; }
 .chip:hover { border-color: #1D9E75; color: #1D9E75; }
-.send-btn { background: #1D9E75; color: white; border: none; border-radius: 8px; padding: 8px 20px; font-size: 14px; cursor: pointer; font-weight: 500; }
-.send-btn:disabled { opacity: 0.5; }
+.send-btn { background: #1D9E75; color: white; border: none; border-radius: 8px; padding: 8px 20px; font-size: 14px; cursor: pointer; font-weight: 600; }
 .filters { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
-.filter-select { font-size: 13px; padding: 8px 10px; border-radius: 8px; border: 1px solid #2a2a2a; background: #111; color: #fff; }
-.main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem; }
-.ai-bubble { background: #111; border-radius: 12px; padding: 1rem 1.25rem; border: 1px solid #1a1a1a; margin-bottom: 1rem; }
-.ai-label { font-size: 12px; color: #1D9E75; font-weight: 500; margin-bottom: 5px; }
-.ai-text { font-size: 14px; line-height: 1.6; color: #ccc; }
-.section-label { font-size: 13px; font-weight: 500; color: #666; margin-bottom: 12px; }
-.property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 16px; }
-.property-card { background: #111; border: 1px solid #1e1e1e; border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.2s; position: relative; }
-.property-card:hover { border-color: #1D9E75; transform: translateY(-2px); }
-.prop-number { position: absolute; top: 10px; left: 10px; background: #1D9E75; color: white; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; z-index: 2; }
-.prop-img { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; overflow: hidden; }
-.prop-img-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.3; }
-.prop-emoji { position: relative; z-index: 1; font-size: 48px; }
-.prop-body { padding: 12px 14px; }
-.prop-price { font-size: 17px; font-weight: 600; color: #fff; }
-.prop-price span { font-size: 12px; color: #666; font-weight: 400; }
-.prop-title { font-size: 13px; color: #888; margin: 3px 0 8px; }
+.filter-select { font-size: 13px; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: #fff; }
+.filter-select option { color: #1a1a1a; background: #fff; }
+.main { max-width: 880px; margin: 0 auto; padding: 1.5rem 1rem; }
+.ai-bubble { background: white; border-radius: 12px; padding: 1rem 1.25rem; border: 1px solid #e8e0d4; margin-bottom: 1rem; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.ai-label { font-size: 12px; color: #1D9E75; font-weight: 600; margin-bottom: 5px; }
+.ai-text { font-size: 14px; line-height: 1.6; color: #555; }
+.section-label { font-size: 13px; font-weight: 600; color: #888; margin-bottom: 12px; }
+.property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+.property-card { background: white; border: 1px solid #e8e0d4; border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.2s; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.property-card:hover { border-color: #1D9E75; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(29,158,117,0.15); }
+.prop-number { position: absolute; top: 10px; left: 10px; background: #1D9E75; color: white; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; z-index: 2; }
+.purpose-badge { position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; z-index: 2; }
+.purpose-badge.rent { background: #fff3e0; color: #e65100; }
+.purpose-badge.buy { background: #e8f5e9; color: #1b5e20; }
+.prop-img { height: 150px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #f0ebe0; }
+.prop-img-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.prop-img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.25); }
+.prop-emoji { position: relative; z-index: 1; font-size: 44px; }
+.prop-user-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.prop-body { padding: 13px 15px; }
+.prop-price { font-size: 18px; font-weight: 700; color: #1a1a1a; }
+.prop-price span { font-size: 12px; color: #999; font-weight: 400; }
+.prop-title { font-size: 13px; color: #777; margin: 3px 0 8px; }
 .prop-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
-.tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #0F3D2E; color: #1D9E75; }
-.prop-meta { display: flex; gap: 10px; font-size: 12px; color: #555; }
-.prop-meta span { display: flex; align-items: center; gap: 3px; }
-.empty-state { text-align: center; padding: 3rem; color: #444; font-size: 14px; }
-.status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; margin-right: 5px; vertical-align: middle; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
-
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
+.tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #e8f5f0; color: #0F6E56; }
+.prop-meta { display: flex; gap: 10px; font-size: 12px; color: #aaa; }
+.empty-state { text-align: center; padding: 3rem; color: #bbb; font-size: 14px; }
+.status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #1D9E75; margin-right: 5px; vertical-align: middle; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
 .modal-overlay.open { display: flex; }
-.modal { background: #111; border: 1px solid #2a2a2a; border-radius: 16px; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; }
-.modal-img { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 64px; background: #0a0a0a; position: relative; border-radius: 16px 16px 0 0; overflow: hidden; }
-.modal-img-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.25; }
-.modal-img-emoji { position: relative; z-index: 1; }
-.modal-body { padding: 1.25rem; }
-.modal-price { font-size: 22px; font-weight: 700; }
-.modal-price span { font-size: 14px; color: #666; font-weight: 400; }
-.modal-title { font-size: 15px; color: #888; margin: 4px 0 16px; }
+.modal { background: #faf7f2; border-radius: 18px; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.modal-img { height: 200px; display: flex; align-items: center; justify-content: center; position: relative; border-radius: 18px 18px 0 0; overflow: hidden; background: #e8e0d0; }
+.modal-img-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.modal-img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
+.modal-img-emoji { position: relative; z-index: 1; font-size: 64px; }
+.modal-user-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.modal-body { padding: 1.5rem; }
+.modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.modal-price { font-size: 24px; font-weight: 800; color: #1a1a1a; }
+.modal-price span { font-size: 14px; color: #999; font-weight: 400; }
+.modal-close { background: #eee; border: none; color: #666; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 6px 12px; }
+.modal-title { font-size: 15px; color: #888; margin-bottom: 16px; }
 .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.modal-stat { background: #1a1a1a; border-radius: 8px; padding: 10px 12px; }
-.modal-stat-label { font-size: 11px; color: #555; margin-bottom: 3px; }
-.modal-stat-val { font-size: 15px; font-weight: 500; }
+.modal-stat { background: white; border-radius: 10px; padding: 10px 14px; border: 1px solid #e8e0d4; }
+.modal-stat-label { font-size: 11px; color: #aaa; margin-bottom: 3px; }
+.modal-stat-val { font-size: 14px; font-weight: 600; color: #1a1a1a; }
 .modal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-.modal-tag { font-size: 12px; padding: 4px 10px; border-radius: 20px; background: #0F3D2E; color: #1D9E75; }
-.modal-contact { background: #1a1a1a; border-radius: 10px; padding: 12px; font-size: 13px; color: #888; line-height: 1.6; }
-.modal-contact a { color: #1D9E75; text-decoration: none; }
-.modal-close { float: right; background: #1a1a1a; border: none; color: #888; font-size: 18px; cursor: pointer; border-radius: 6px; padding: 4px 10px; margin-bottom: 8px; }
-.modal-close:hover { color: #fff; }
-.contact-btn { display: block; width: 100%; background: #1D9E75; color: white; border: none; border-radius: 10px; padding: 12px; font-size: 15px; cursor: pointer; font-weight: 500; margin-top: 12px; text-align: center; }
-.contact-btn:hover { background: #17856a; }
-
-.submit-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
+.modal-tag { font-size: 12px; padding: 4px 10px; border-radius: 20px; background: #e8f5f0; color: #0F6E56; }
+.contact-section { background: white; border-radius: 12px; padding: 14px; border: 1px solid #e8e0d4; margin-bottom: 12px; }
+.contact-section h4 { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 10px; }
+.contact-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0ebe0; }
+.contact-row:last-child { border-bottom: none; }
+.contact-label { font-size: 12px; color: #999; }
+.contact-val { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.contact-val.green { color: #1D9E75; }
+.wa-btn { display: block; width: 100%; background: #25D366; color: white; border: none; border-radius: 12px; padding: 13px; font-size: 15px; cursor: pointer; font-weight: 600; text-align: center; text-decoration: none; }
+.wa-btn:hover { background: #20b857; }
+.submit-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
 .submit-modal-overlay.open { display: flex; }
-.submit-modal { background: #111; border: 1px solid #2a2a2a; border-radius: 16px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 1.5rem; }
-.submit-modal h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-.submit-modal p { font-size: 13px; color: #666; margin-bottom: 1.5rem; }
+.submit-modal { background: #faf7f2; border-radius: 18px; max-width: 520px; width: 100%; max-height: 92vh; overflow-y: auto; padding: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.submit-modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.submit-modal .sub { font-size: 13px; color: #888; margin-bottom: 6px; }
+.pricing-badge { display: inline-block; background: #e8f5f0; color: #0F6E56; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; }
 .form-group { margin-bottom: 12px; }
-.form-group label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 9px 12px; font-size: 14px; color: #fff; outline: none; font-family: system-ui; }
-.form-group textarea { min-height: 80px; resize: none; }
+.form-group label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; background: white; border: 1px solid #e0d8cc; border-radius: 9px; padding: 9px 12px; font-size: 14px; color: #1a1a1a; outline: none; font-family: system-ui; }
+.form-group input:focus, .form-group select:focus { border-color: #1D9E75; }
+.form-group textarea { min-height: 70px; resize: none; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.submit-btn { width: 100%; background: #1D9E75; color: white; border: none; border-radius: 10px; padding: 12px; font-size: 15px; cursor: pointer; font-weight: 500; margin-top: 8px; }
-.submit-btn:hover { background: #17856a; }
-.cancel-btn { width: 100%; background: transparent; color: #666; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px; font-size: 14px; cursor: pointer; margin-top: 8px; }
-.success-msg { text-align: center; padding: 2rem; }
-.success-msg .check { font-size: 48px; margin-bottom: 1rem; }
-.success-msg h3 { font-size: 18px; margin-bottom: 8px; }
-.success-msg p { font-size: 14px; color: #666; }
+.photo-upload { border: 2px dashed #e0d8cc; border-radius: 10px; padding: 16px; text-align: center; cursor: pointer; color: #aaa; font-size: 13px; transition: border-color 0.15s; }
+.photo-upload:hover { border-color: #1D9E75; color: #1D9E75; }
+.photo-preview { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-top: 8px; display: none; }
+.divider { border: none; border-top: 1px solid #e8e0d4; margin: 16px 0; }
+.payment-box { background: #e8f5f0; border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+.payment-box h4 { font-size: 14px; font-weight: 600; color: #0F6E56; margin-bottom: 8px; }
+.payment-box p { font-size: 13px; color: #0F6E56; line-height: 1.6; }
+.account-num { font-size: 16px; font-weight: 700; letter-spacing: 1px; color: #0F6E56; background: white; padding: 8px 12px; border-radius: 8px; margin: 8px 0; display: inline-block; }
+.submit-btn { width: 100%; background: #1D9E75; color: white; border: none; border-radius: 12px; padding: 13px; font-size: 15px; cursor: pointer; font-weight: 600; margin-top: 8px; }
+.submit-btn:hover { background: #178a64; }
+.cancel-btn { width: 100%; background: transparent; color: #aaa; border: 1px solid #e0d8cc; border-radius: 12px; padding: 10px; font-size: 14px; cursor: pointer; margin-top: 8px; }
+.success-msg { text-align: center; padding: 2rem 1rem; }
+.success-msg .check { font-size: 52px; margin-bottom: 1rem; }
+.success-msg h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.success-msg p { font-size: 14px; color: #888; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -106,7 +130,7 @@ body { background: #0a0a0a; color: #fff; }
           <p id="status-text">Connecting to live database...</p>
         </div>
       </div>
-      <button class="list-btn" onclick="openSubmit()">+ List your property</button>
+      <button class="list-btn" onclick="openSubmit()">+ List your property <span class="price-tag">3 KD/mo</span></button>
     </div>
     <div class="search-bar">
       <textarea id="query" placeholder="e.g. 3-bedroom apartment in Salmiya under 450 KD, near the sea..."></textarea>
@@ -117,7 +141,7 @@ body { background: #0a0a0a; color: #fff; }
           <span class="chip" onclick="fillChip('studio expat furnished')">Studio</span>
           <span class="chip" onclick="fillChip('sea view family apartment')">Sea view family</span>
         </div>
-        <button class="send-btn" id="searchBtn" onclick="doSearch()">Search</button>
+        <button class="send-btn" onclick="doSearch()">Search</button>
       </div>
     </div>
     <div class="filters">
@@ -147,74 +171,30 @@ body { background: #0a0a0a; color: #fff; }
 </div>
 
 <div class="submit-modal-overlay" id="submitModal" onclick="closeSubmit(event)">
-  <div class="submit-modal" id="submitContent">
-    <h2>List your property</h2>
-    <p>Fill in the details below and we'll add your property to the listings.</p>
-    <div class="form-row">
-      <div class="form-group"><label>Your name</label><input type="text" id="f-name" placeholder="Mohammed Al-..."></div>
-      <div class="form-group"><label>Phone / WhatsApp</label><input type="text" id="f-phone" placeholder="+965 XXXX XXXX"></div>
-    </div>
-    <div class="form-group"><label>Property title</label><input type="text" id="f-title" placeholder="e.g. Spacious 3BR in Salmiya"></div>
-    <div class="form-row">
-      <div class="form-group"><label>Area</label>
-        <select id="f-area">
-          <option>Salmiya</option><option>Kuwait City</option><option>Mishref</option>
-          <option>Jabriya</option><option>Hawally</option><option>Fintas</option>
-          <option>Rumaithiya</option><option>Mangaf</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Type</label>
-        <select id="f-type"><option>Apartment</option><option>Villa</option><option>Studio</option><option>Chalet</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Price (KD)</label><input type="text" id="f-price" placeholder="e.g. 350"></div>
-      <div class="form-group"><label>For</label>
-        <select id="f-purpose"><option>Rent</option><option>Buy</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Bedrooms</label><input type="number" id="f-beds" placeholder="3" min="0"></div>
-      <div class="form-group"><label>Size (m²)</label><input type="number" id="f-sqm" placeholder="150"></div>
-    </div>
-    <div class="form-group"><label>Features (comma separated)</label><input type="text" id="f-tags" placeholder="Sea view, Gym, Parking"></div>
-    <div class="form-group"><label>Description</label><textarea id="f-desc" placeholder="Tell us more about the property..."></textarea></div>
-    <button class="submit-btn" onclick="submitProperty()">Submit listing</button>
-    <button class="cancel-btn" onclick="document.getElementById('submitModal').classList.remove('open')">Cancel</button>
-  </div>
+  <div class="submit-modal" id="submitContent"></div>
 </div>
 
 <script>
 const SUPABASE_URL='https://qhebhvllkovfbkqrcnmm.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoZWJodmxsa292ZmJrcXJjbm1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNTgwMTksImV4cCI6MjA5MTYzNDAxOX0.AQl5WAB1_ma3zcrkW4NFKk6oCKBUlTthD68ujcSlnas';
 let PROPERTIES=[];
-
-const BG_IMAGES={
-  'Apartment':'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=60',
-  'Villa':'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=60',
-  'Studio':'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&q=60',
-  'Chalet':'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=60',
-  'default':'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=60'
-};
-
-function getBg(type){ return BG_IMAGES[type]||BG_IMAGES['default']; }
+const BG={'Apartment':'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=70','Villa':'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=70','Studio':'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=70','Chalet':'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600&q=70','default':'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=70'};
+function getBg(t){return BG[t]||BG.default;}
 
 async function loadProperties(){
   try{
-    const res=await fetch(SUPABASE_URL+'/rest/v1/properties?select=*&order=id.asc',{
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
-    });
-    if(!res.ok) throw new Error('HTTP '+res.status);
+    const res=await fetch(SUPABASE_URL+'/rest/v1/properties?select=*&order=id.asc',{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    if(!res.ok)throw new Error('HTTP '+res.status);
     const data=await res.json();
     if(Array.isArray(data)&&data.length>0){
       PROPERTIES=data.map(p=>({...p,tags:p.tags?p.tags.split(','):[]}));
       document.getElementById('status-text').innerHTML='<span class="status-dot"></span>Live — '+PROPERTIES.length+' properties';
       document.getElementById('results').innerHTML='<div class="empty-state">Describe your ideal property above to find matches</div>';
-    } else {
+    }else{
       document.getElementById('status-text').textContent='Connected — no properties yet';
       document.getElementById('results').innerHTML='<div class="empty-state">No listings yet.</div>';
     }
-  } catch(e){
+  }catch(e){
     document.getElementById('status-text').textContent='Could not connect';
     document.getElementById('results').innerHTML='<div class="empty-state">Connection failed.</div>';
   }
@@ -223,65 +203,39 @@ async function loadProperties(){
 function fillChip(t){document.getElementById('query').value=t;}
 
 function smartSearch(query,properties){
-  const q=query.toLowerCase();
-  const words=q.split(/\s+/);
-  const scored=properties.map(p=>{
+  const q=query.toLowerCase();const words=q.split(/\s+/);
+  return properties.map(p=>{
     let score=0;
-    const searchable=(p.title+' '+p.area+' '+p.type+' '+p.purpose+' '+(p.tags||[]).join(' ')+' '+p.beds+' bed').toLowerCase();
+    const s=(p.title+' '+p.area+' '+p.type+' '+p.purpose+' '+(p.tags||[]).join(' ')+' '+p.beds).toLowerCase();
     words.forEach(w=>{
-      if(w.length<2) return;
-      if(searchable.includes(w)) score+=2;
-      if(p.area&&p.area.toLowerCase().includes(w)) score+=3;
-      if(p.type&&p.type.toLowerCase().includes(w)) score+=2;
-      if(w==='studio'&&p.beds===0) score+=4;
-      if(w==='villa'&&p.type==='Villa') score+=4;
-      if(w==='apartment'&&p.type==='Apartment') score+=3;
-      if((w==='sea'||w==='view')&&(p.tags||[]).some(t=>t.toLowerCase().includes('sea')||t.toLowerCase().includes('view'))) score+=3;
-      if(w==='pool'&&(p.tags||[]).some(t=>t.toLowerCase().includes('pool'))) score+=3;
-      if(w==='furnished'&&(p.tags||[]).some(t=>t.toLowerCase().includes('furnished'))) score+=3;
-      if(w==='pet'&&(p.tags||[]).some(t=>t.toLowerCase().includes('pet'))) score+=3;
-      if((w==='budget'||w==='cheap'||w==='affordable')&&(p.tags||[]).some(t=>t.toLowerCase().includes('affordable'))) score+=2;
-      if(w==='luxury'&&(p.type==='Villa'||p.beds>=4)) score+=2;
-      const numMatch=q.match(/(\d+)\s*(bed|bedroom|br)/);
-      if(numMatch&&p.beds==parseInt(numMatch[1])) score+=5;
-      const kdMatch=q.match(/under\s*(\d+)/);
-      if(kdMatch){
-        const maxPrice=parseInt(kdMatch[1]);
-        const propPrice=parseInt((p.price||'').replace(/[^\d]/g,''));
-        if(propPrice&&propPrice<=maxPrice) score+=4;
-        else if(propPrice&&propPrice>maxPrice) score-=3;
-      }
+      if(w.length<2)return;
+      if(s.includes(w))score+=2;
+      if(p.area&&p.area.toLowerCase().includes(w))score+=3;
+      if(p.type&&p.type.toLowerCase().includes(w))score+=2;
+      if(w==='studio'&&p.beds===0)score+=4;
+      if(w==='villa'&&p.type==='Villa')score+=4;
+      if(w==='apartment'&&p.type==='Apartment')score+=3;
+      if((w==='sea'||w==='view')&&(p.tags||[]).some(t=>t.toLowerCase().includes('sea')||t.toLowerCase().includes('view')))score+=3;
+      if(w==='pool'&&(p.tags||[]).some(t=>t.toLowerCase().includes('pool')))score+=3;
+      if(w==='furnished'&&(p.tags||[]).some(t=>t.toLowerCase().includes('furnished')))score+=3;
+      if((w==='budget'||w==='cheap')&&(p.tags||[]).some(t=>t.toLowerCase().includes('affordable')))score+=2;
+      if(w==='luxury'&&(p.type==='Villa'||p.beds>=4))score+=2;
+      const nm=q.match(/(\d+)\s*(bed|bedroom|br)/);if(nm&&p.beds==parseInt(nm[1]))score+=5;
+      const km=q.match(/under\s*(\d+)/);
+      if(km){const mx=parseInt(km[1]);const pp=parseInt((p.price||'').replace(/[^\d]/g,''));if(pp&&pp<=mx)score+=4;else if(pp&&pp>mx)score-=3;}
     });
     return{...p,score};
-  });
-  return scored.filter(p=>p.score>0).sort((a,b)=>b.score-a.score).slice(0,6);
+  }).filter(p=>p.score>0).sort((a,b)=>b.score-a.score).slice(0,6);
 }
 
 function renderCards(matched){
-  if(matched.length===0) return '<div class="empty-state">No matches found — try different keywords or remove filters</div>';
-  let html='<div class="property-grid">';
-  matched.forEach((p,i)=>{
+  if(!matched.length)return'<div class="empty-state">No matches found — try different keywords</div>';
+  return'<div class="property-grid">'+matched.map((p,i)=>{
     const bg=getBg(p.type);
-    html+=`<div class="property-card" onclick="openModal(${p.id})">
-      <div class="prop-number">#${i+1}</div>
-      <div class="prop-img">
-        <div class="prop-img-bg" style="background-image:url('${bg}')"></div>
-        <div class="prop-emoji">${p.emoji||'🏢'}</div>
-      </div>
-      <div class="prop-body">
-        <div class="prop-price">${p.price} <span>${p.period||''}</span></div>
-        <div class="prop-title">${p.title}</div>
-        <div class="prop-tags">${(p.tags||[]).slice(0,3).map(t=>'<span class="tag">'+t.trim()+'</span>').join('')}</div>
-        <div class="prop-meta">
-          <span>📍 ${p.area}</span>
-          <span>🛏 ${p.beds?p.beds+' bed':'Studio'}</span>
-          <span>📐 ${p.sqm} m²</span>
-        </div>
-      </div>
-    </div>`;
-  });
-  html+='</div>';
-  return html;
+    const bc=p.purpose==='Rent'?'rent':'buy';
+    const imgHtml=p.photo_url?`<img class="prop-user-img" src="${p.photo_url}" alt="${p.title}" onerror="this.style.display='none'">`:`<div class="prop-img-bg" style="background-image:url('${bg}')"></div><div class="prop-img-overlay"></div><div class="prop-emoji">${p.emoji||'🏢'}</div>`;
+    return`<div class="property-card" onclick="openModal(${p.id})"><div class="prop-number">#${i+1}</div><span class="purpose-badge ${bc}">For ${p.purpose}</span><div class="prop-img">${imgHtml}</div><div class="prop-body"><div class="prop-price">${p.price} <span>${p.period||''}</span></div><div class="prop-title">${p.title}</div><div class="prop-tags">${(p.tags||[]).slice(0,3).map(t=>'<span class="tag">'+t.trim()+'</span>').join('')}</div><div class="prop-meta"><span>📍 ${p.area}</span><span>🛏 ${p.beds?p.beds+' bed':'Studio'}</span><span>📐 ${p.sqm} m²</span></div></div></div>`;
+  }).join('')+'</div>';
 }
 
 function doSearch(){
@@ -289,88 +243,107 @@ function doSearch(){
   const area=document.getElementById('area').value;
   const type=document.getElementById('type').value;
   const purpose=document.getElementById('purpose').value;
-  if(!q&&!area&&!type&&!purpose) return;
+  if(!q&&!area&&!type&&!purpose)return;
   let filtered=PROPERTIES;
-  if(area) filtered=filtered.filter(p=>p.area===area);
-  if(type) filtered=filtered.filter(p=>p.type===type);
-  if(purpose) filtered=filtered.filter(p=>p.purpose===purpose);
+  if(area)filtered=filtered.filter(p=>p.area===area);
+  if(type)filtered=filtered.filter(p=>p.type===type);
+  if(purpose)filtered=filtered.filter(p=>p.purpose===purpose);
   const matched=q?smartSearch(q,filtered):filtered.slice(0,6);
-  const msg=matched.length>0?`Found ${matched.length} propert${matched.length===1?'y':'ies'} matching your search. Here are the best options for you!`:"No properties matched your search. Try different keywords or remove some filters.";
-  let html='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="ai-text">'+msg+'</div></div>';
-  html+='<div class="section-label" style="margin-bottom:12px">'+matched.length+' properties found</div>';
-  html+=renderCards(matched);
-  document.getElementById('results').innerHTML=html;
+  const msg=matched.length>0?`Found ${matched.length} propert${matched.length===1?'y':'ies'} matching your search!`:'No properties matched. Try different keywords.';
+  document.getElementById('results').innerHTML='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="ai-text">'+msg+'</div></div><div class="section-label">'+matched.length+' properties found</div>'+renderCards(matched);
 }
 
 function openModal(id){
-  const p=PROPERTIES.find(x=>x.id==id);
-  if(!p) return;
+  const p=PROPERTIES.find(x=>x.id==id);if(!p)return;
   const bg=getBg(p.type);
+  const imgHtml=p.photo_url?`<img class="modal-user-img" src="${p.photo_url}" alt="${p.title}" onerror="this.style.display='none'">`:`<div class="modal-img-bg" style="background-image:url('${bg}')"></div><div class="modal-img-overlay"></div><div class="modal-img-emoji">${p.emoji||'🏢'}</div>`;
+  const phone=p.customer_phone||'Not provided';
+  const acct=p.account_number||'—';
   document.getElementById('modalContent').innerHTML=`
-    <div class="modal-img">
-      <div class="modal-img-bg" style="background-image:url('${bg}')"></div>
-      <div class="modal-img-emoji">${p.emoji||'🏢'}</div>
-    </div>
+    <div class="modal-img">${imgHtml}</div>
     <div class="modal-body">
-      <button class="modal-close" onclick="document.getElementById('propModal').classList.remove('open')">✕ Close</button>
-      <div class="modal-price">${p.price} <span>${p.period||''}</span></div>
-      <div class="modal-title">${p.title}</div>
+      <div class="modal-header">
+        <div><div class="modal-price">${p.price} <span>${p.period||''}</span></div><div class="modal-title">${p.title}</div></div>
+        <button class="modal-close" onclick="document.getElementById('propModal').classList.remove('open')">✕</button>
+      </div>
       <div class="modal-grid">
         <div class="modal-stat"><div class="modal-stat-label">Area</div><div class="modal-stat-val">📍 ${p.area}</div></div>
         <div class="modal-stat"><div class="modal-stat-label">Type</div><div class="modal-stat-val">${p.type}</div></div>
-        <div class="modal-stat"><div class="modal-stat-label">Bedrooms</div><div class="modal-stat-val">🛏 ${p.beds?p.beds+' bedrooms':'Studio'}</div></div>
-        <div class="modal-stat"><div class="modal-stat-label">Bathrooms</div><div class="modal-stat-val">🚿 ${p.baths||'—'} bathrooms</div></div>
+        <div class="modal-stat"><div class="modal-stat-label">Bedrooms</div><div class="modal-stat-val">🛏 ${p.beds?p.beds+' beds':'Studio'}</div></div>
+        <div class="modal-stat"><div class="modal-stat-label">Bathrooms</div><div class="modal-stat-val">🚿 ${p.baths||'—'}</div></div>
         <div class="modal-stat"><div class="modal-stat-label">Size</div><div class="modal-stat-val">📐 ${p.sqm} m²</div></div>
-        <div class="modal-stat"><div class="modal-stat-label">Purpose</div><div class="modal-stat-val">🏷 For ${p.purpose}</div></div>
+        <div class="modal-stat"><div class="modal-stat-label">For</div><div class="modal-stat-val">🏷 ${p.purpose}</div></div>
       </div>
       <div class="modal-tags">${(p.tags||[]).map(t=>'<span class="modal-tag">'+t.trim()+'</span>').join('')}</div>
-      <div class="modal-contact">
-        <strong style="color:#fff">Interested?</strong><br>
-        Contact us on WhatsApp to arrange a viewing or get more details.<br><br>
-        <a href="https://wa.me/96500000000?text=Hi, I'm interested in: ${encodeURIComponent(p.title)}" target="_blank">
-          📱 Contact on WhatsApp
-        </a>
+      <div class="contact-section">
+        <h4>Owner contact details</h4>
+        <div class="contact-row"><span class="contact-label">Account number</span><span class="contact-val">${acct}</span></div>
+        <div class="contact-row"><span class="contact-label">Customer call number</span><span class="contact-val green">📞 ${phone}</span></div>
       </div>
-      <button class="contact-btn" onclick="window.open('https://wa.me/96500000000?text=Hi, I am interested in: ${encodeURIComponent(p.title)}','_blank')">
-        Contact owner on WhatsApp
-      </button>
+      <a class="wa-btn" href="https://wa.me/${phone.replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Hi, I am interested in: '+p.title)}" target="_blank">💬 Contact owner on WhatsApp</a>
     </div>`;
   document.getElementById('propModal').classList.add('open');
 }
 
-function closeModal(e){
-  if(e.target===document.getElementById('propModal')) document.getElementById('propModal').classList.remove('open');
-}
+function closeModal(e){if(e.target===document.getElementById('propModal'))document.getElementById('propModal').classList.remove('open');}
+function closeSubmit(e){if(e.target===document.getElementById('submitModal'))document.getElementById('submitModal').classList.remove('open');}
+
+let selectedPhotoBase64='';
 
 function openSubmit(){
+  selectedPhotoBase64='';
   document.getElementById('submitContent').innerHTML=`
     <h2>List your property</h2>
-    <p>Fill in your details and we'll review and add your property within 24 hours.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="form-group"><label>Your name</label><input type="text" id="f-name" placeholder="Mohammed Al-..."></div>
-      <div class="form-group"><label>Phone / WhatsApp</label><input type="text" id="f-phone" placeholder="+965 XXXX XXXX"></div>
+    <p class="sub">Reach thousands of buyers and renters in Kuwait</p>
+    <div class="pricing-badge">3 KD / month — Pay once, list instantly</div>
+    <div class="payment-box">
+      <h4>💳 How to pay</h4>
+      <p>Transfer 3 KD to our account and include your phone number as reference:</p>
+      <div class="account-num">KFIN-0042-7731-KWD</div>
+      <p>Fill in your details below and submit. We'll verify and activate your listing within 24 hours.</p>
     </div>
-    <div class="form-group"><label>Property title</label><input type="text" id="f-title" placeholder="e.g. Spacious 3BR in Salmiya"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="form-row">
+      <div class="form-group"><label>Your name *</label><input type="text" id="f-name" placeholder="Mohammed Al-..."></div>
+      <div class="form-group"><label>Your account number *</label><input type="text" id="f-account" placeholder="Your bank account #"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Customer call number * <small style="color:#1D9E75">(shown on listing)</small></label><input type="text" id="f-phone" placeholder="+965 XXXX XXXX"></div>
+      <div class="form-group"><label>WhatsApp number</label><input type="text" id="f-wa" placeholder="+965 XXXX XXXX"></div>
+    </div>
+    <hr class="divider">
+    <div class="form-group"><label>Property title *</label><input type="text" id="f-title" placeholder="e.g. Spacious 3BR apartment in Salmiya"></div>
+    <div class="form-row">
       <div class="form-group"><label>Area</label><select id="f-area"><option>Salmiya</option><option>Kuwait City</option><option>Mishref</option><option>Jabriya</option><option>Hawally</option><option>Fintas</option><option>Rumaithiya</option><option>Mangaf</option></select></div>
       <div class="form-group"><label>Type</label><select id="f-type"><option>Apartment</option><option>Villa</option><option>Studio</option><option>Chalet</option></select></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="form-group"><label>Price (KD)</label><input type="text" id="f-price" placeholder="e.g. 350"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Price (KD) *</label><input type="text" id="f-price" placeholder="e.g. 350"></div>
       <div class="form-group"><label>For</label><select id="f-purpose"><option>Rent</option><option>Buy</option></select></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="form-row">
       <div class="form-group"><label>Bedrooms</label><input type="number" id="f-beds" placeholder="3" min="0"></div>
       <div class="form-group"><label>Size (m²)</label><input type="number" id="f-sqm" placeholder="150"></div>
     </div>
-    <div class="form-group"><label>Features (comma separated)</label><input type="text" id="f-tags" placeholder="Sea view, Gym, Parking"></div>
-    <button class="submit-btn" onclick="submitProperty()">Submit listing</button>
+    <div class="form-group"><label>Features (comma separated)</label><input type="text" id="f-tags" placeholder="Sea view, Gym, Covered parking"></div>
+    <div class="form-group">
+      <label>Property photo (optional)</label>
+      <div class="photo-upload" onclick="document.getElementById('photoInput').click()">📷 Click to upload a photo of your property<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto(event)"></div>
+      <img id="photoPreview" class="photo-preview">
+    </div>
+    <button class="submit-btn" onclick="submitProperty()">Submit listing — 3 KD/mo</button>
     <button class="cancel-btn" onclick="document.getElementById('submitModal').classList.remove('open')">Cancel</button>`;
   document.getElementById('submitModal').classList.add('open');
 }
 
-function closeSubmit(e){
-  if(e.target===document.getElementById('submitModal')) document.getElementById('submitModal').classList.remove('open');
+function previewPhoto(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    selectedPhotoBase64=ev.target.result;
+    const pr=document.getElementById('photoPreview');
+    pr.src=ev.target.result;pr.style.display='block';
+  };
+  reader.readAsDataURL(file);
 }
 
 async function submitProperty(){
@@ -378,40 +351,22 @@ async function submitProperty(){
   const phone=document.getElementById('f-phone').value.trim();
   const title=document.getElementById('f-title').value.trim();
   const price=document.getElementById('f-price').value.trim();
-  if(!name||!phone||!title||!price){ alert('Please fill in all required fields.'); return; }
-  const property={
-    title,
-    area:document.getElementById('f-area').value,
-    type:document.getElementById('f-type').value,
-    purpose:document.getElementById('f-purpose').value,
-    price:price+' KD',
-    period:document.getElementById('f-purpose').value==='Rent'?'/mo':'',
-    beds:parseInt(document.getElementById('f-beds').value)||0,
-    baths:1,
-    sqm:parseInt(document.getElementById('f-sqm').value)||0,
-    tags:document.getElementById('f-tags').value,
-    emoji:document.getElementById('f-type').value==='Villa'?'🏡':document.getElementById('f-type').value==='Studio'?'🏠':'🏢',
-  };
+  const account=document.getElementById('f-account').value.trim();
+  if(!name||!phone||!title||!price){alert('Please fill in all required fields (*).');return;}
+  const typeVal=document.getElementById('f-type').value;
+  const emoji=typeVal==='Villa'?'🏡':typeVal==='Studio'?'🏠':'🏢';
+  const property={title,area:document.getElementById('f-area').value,type:typeVal,purpose:document.getElementById('f-purpose').value,price:price+' KD',period:document.getElementById('f-purpose').value==='Rent'?'/mo':'',beds:parseInt(document.getElementById('f-beds').value)||0,baths:1,sqm:parseInt(document.getElementById('f-sqm').value)||0,tags:document.getElementById('f-tags').value,emoji,customer_phone:phone,account_number:account,photo_url:selectedPhotoBase64||null};
   try{
-    const res=await fetch(SUPABASE_URL+'/rest/v1/properties',{
-      method:'POST',
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify(property)
-    });
+    const res=await fetch(SUPABASE_URL+'/rest/v1/properties',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(property)});
     if(res.ok||res.status===201){
-      document.getElementById('submitContent').innerHTML=`<div class="success-msg"><div class="check">✅</div><h3>Property submitted!</h3><p>Your listing has been added successfully. Refresh the page to see it live.</p><button class="submit-btn" style="margin-top:1rem" onclick="document.getElementById('submitModal').classList.remove('open');loadProperties()">Done</button></div>`;
-    } else {
-      alert('Could not submit. Please try again.');
+      document.getElementById('submitContent').innerHTML=`<div class="success-msg"><div class="check">✅</div><h3>Property submitted!</h3><p>Your listing has been submitted.<br>It will go live once we verify your 3 KD payment.<br><br>Thank you, ${name}!</p><button class="submit-btn" style="max-width:200px;margin:1rem auto 0;display:block" onclick="document.getElementById('submitModal').classList.remove('open');loadProperties()">Done</button></div>`;
+    }else{
+      alert('Submission failed. Make sure you ran the SQL to add the new columns in Supabase.');
     }
-  } catch(e){
-    alert('Connection error. Please try again.');
-  }
+  }catch(e){alert('Connection error. Please try again.');}
 }
 
-document.getElementById('query').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSearch();}
-});
-
+document.getElementById('query').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSearch();}});
 loadProperties();
 </script>
 </body>
