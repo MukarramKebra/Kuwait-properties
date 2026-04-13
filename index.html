@@ -134,7 +134,7 @@ async function doSearch(){
   if(purpose)filtered=filtered.filter(p=>p.purpose===purpose);
   const prompt=`You are a Kuwait real estate assistant. User query: "${q}". Properties: ${JSON.stringify(filtered.map(p=>({id:p.id,title:p.title,area:p.area,type:p.type,purpose:p.purpose,beds:p.beds,tags:p.tags,price:p.price})))}. Respond with JSON only, no markdown: {"message":"1-2 sentence friendly response","property_ids":[up to 4 matching ids as numbers]}`;
   try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_KEY,{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+GEMINI_KEY,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
     });
