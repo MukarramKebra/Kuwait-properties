@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuwait Property Finder</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+body { background: #0f0f0f; color: #fff; padding: 1rem; }
+.app { max-width: 800px; margin: 0 auto; padding: 1rem 0; }
+.header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #222; }
+.logo { width: 40px; height: 40px; background: #1D9E75; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.logo svg { width: 22px; height: 22px; fill: white; }
+.header-text h1 { font-size: 18px; font-weight: 500; }
+.header-text p { font-size: 13px; color: #888; }
+.search-bar { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.search-bar textarea { width: 100%; border: none; outline: none; resize: none; font-size: 15px; color: #fff; background: transparent; min-height: 52px; }
+.search-bar textarea::placeholder { color: #555; }
+.search-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 8px; }
+.quick-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: 12px; padding: 4px 10px; border: 1px solid #333; border-radius: 20px; cursor: pointer; color: #888; background: #1a1a1a; white-space: nowrap; }
+.chip:hover { border-color: #1D9E75; color: #1D9E75; }
+.send-btn { background: #1D9E75; color: white; border: none; border-radius: 8px; padding: 8px 18px; font-size: 14px; cursor: pointer; font-weight: 500; }
+.send-btn:disabled { opacity: 0.5; }
+.filters { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1rem; }
+.filter-select { font-size: 13px; padding: 7px 10px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; }
+.results-area { display: flex; flex-direction: column; gap: 1rem; }
+.ai-bubble { background: #1a1a1a; border-radius: 12px; padding: 1rem 1.25rem; border: 1px solid #222; }
+.ai-label { font-size: 12px; color: #1D9E75; font-weight: 500; margin-bottom: 6px; }
+.ai-text { font-size: 14px; line-height: 1.6; }
+.property-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 12px; }
+.property-card { background: #1a1a1a; border: 1px solid #222; border-radius: 12px; overflow: hidden; }
+.property-card:hover { border-color: #1D9E75; }
+.prop-img { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 38px; background: #111; }
+.prop-body { padding: 12px; }
+.prop-price { font-size: 16px; font-weight: 500; }
+.prop-price span { font-size: 12px; color: #888; font-weight: 400; }
+.prop-title { font-size: 13px; color: #888; margin: 2px 0 6px; }
+.prop-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { font-size: 11px; padding: 2px 7px; border-radius: 20px; background: #0F3D2E; color: #1D9E75; }
+.prop-location { font-size: 12px; color: #555; margin-top: 6px; }
+.typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; animation: bounce 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,80%,100%{transform:translateY(0);opacity:0.4}40%{transform:translateY(-5px);opacity:1} }
+.empty-state { text-align: center; padding: 2rem; color: #555; font-size: 14px; }
+.section-label { font-size: 13px; font-weight: 500; color: #888; margin-bottom: 8px; }
+.status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; margin-right: 5px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="logo"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+    <div class="header-text">
+      <h1>Kuwait Property Finder</h1>
+      <p id="status-text">Connecting to live database...</p>
+    </div>
+  </div>
+  <div class="search-bar">
+    <textarea id="query" placeholder="e.g. 3-bedroom apartment in Salmiya under 450 KD, near the sea..."></textarea>
+    <div class="search-actions">
+      <div class="quick-chips">
+        <span class="chip" onclick="fillChip('Budget apartment under 300 KD')">Budget apartment</span>
+        <span class="chip" onclick="fillChip('Luxury villa with pool')">Luxury villa</span>
+        <span class="chip" onclick="fillChip('Studio for single expat')">Studio</span>
+        <span class="chip" onclick="fillChip('Family apartment sea view')">Sea view family</span>
+      </div>
+      <button class="send-btn" id="searchBtn" onclick="doSearch()">Search</button>
+    </div>
+  </div>
+  <div class="filters">
+    <select class="filter-select" id="area">
+      <option value="">All areas</option>
+      <option>Salmiya</option><option>Kuwait City</option><option>Mishref</option>
+      <option>Jabriya</option><option>Hawally</option><option>Fintas</option>
+      <option>Rumaithiya</option><option>Mangaf</option>
+    </select>
+    <select class="filter-select" id="type">
+      <option value="">Any type</option>
+      <option>Apartment</option><option>Villa</option><option>Studio</option><option>Chalet</option>
+    </select>
+    <select class="filter-select" id="purpose">
+      <option value="">Rent or buy</option><option>Rent</option><option>Buy</option>
+    </select>
+  </div>
+  <div class="results-area" id="results">
+    <div class="empty-state">Loading your live listings...</div>
+  </div>
+</div>
+<script>
+const SUPABASE_URL='https://qhebhvllkovfbkqrcnmm.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoZWJodmxsa292ZmJrcXJjbm1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNTgwMTksImV4cCI6MjA5MTYzNDAxOX0.AQl5WAB1_ma3zcrkW4NFKk6oCKBUlTthD68ujcSlnas';
+const GEMINI_KEY='AIzaSyBiAxZ1dDhLjrAuu53-z1D6gA9C_bXK0_U';
+let PROPERTIES=[];
+
+async function loadProperties(){
+  try{
+    const res=await fetch(SUPABASE_URL+'/rest/v1/properties?select=*&order=id.asc',{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    if(Array.isArray(data)&&data.length>0){
+      PROPERTIES=data.map(p=>({...p,tags:p.tags?p.tags.split(','):[]}));
+      document.getElementById('status-text').innerHTML='<span class="status-dot"></span>Live — '+PROPERTIES.length+' properties loaded';
+      document.getElementById('results').innerHTML='<div class="empty-state">Describe your ideal property above and the AI will find matches for you</div>';
+    } else {
+      document.getElementById('status-text').textContent='Connected — no properties yet';
+      document.getElementById('results').innerHTML='<div class="empty-state">No listings yet.</div>';
+    }
+  } catch(e){
+    document.getElementById('status-text').textContent='Could not connect: '+e.message;
+    document.getElementById('results').innerHTML='<div class="empty-state">Connection failed.</div>';
+  }
+}
+
+function fillChip(t){document.getElementById('query').value=t;}
+
+async function doSearch(){
+  const q=document.getElementById('query').value.trim();
+  const area=document.getElementById('area').value;
+  const type=document.getElementById('type').value;
+  const purpose=document.getElementById('purpose').value;
+  if(!q&&!area&&!type&&!purpose)return;
+  const btn=document.getElementById('searchBtn');
+  btn.disabled=true;btn.textContent='Searching...';
+  const resultsEl=document.getElementById('results');
+  resultsEl.innerHTML='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+  let filtered=PROPERTIES;
+  if(area)filtered=filtered.filter(p=>p.area===area);
+  if(type)filtered=filtered.filter(p=>p.type===type);
+  if(purpose)filtered=filtered.filter(p=>p.purpose===purpose);
+  const prompt=`You are a Kuwait real estate assistant. User query: "${q}". Properties: ${JSON.stringify(filtered.map(p=>({id:p.id,title:p.title,area:p.area,type:p.type,purpose:p.purpose,beds:p.beds,tags:p.tags,price:p.price})))}. Respond with JSON only, no markdown: {"message":"1-2 sentence friendly response","property_ids":[up to 4 matching ids as numbers]}`;
+  try{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_KEY,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    const data=await res.json();
+    const raw=data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(raw);
+    const matched=parsed.property_ids.map(id=>PROPERTIES.find(p=>p.id==id)).filter(Boolean);
+    let html='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="ai-text">'+parsed.message+'</div></div>';
+    if(matched.length>0){
+      html+='<div><div class="section-label">'+matched.length+' properties found</div><div class="property-grid">';
+      matched.forEach(p=>{
+        html+='<div class="property-card"><div class="prop-img">'+(p.emoji||'🏢')+'</div><div class="prop-body"><div class="prop-price">'+p.price+' <span>'+(p.period||'')+'</span></div><div class="prop-title">'+p.title+'</div><div class="prop-tags">'+(p.tags||[]).map(t=>'<span class="tag">'+t.trim()+'</span>').join('')+'</div><div class="prop-location">'+p.area+' · '+(p.beds?p.beds+' bed':'Studio')+' · '+p.sqm+' m²</div></div></div>';
+      });
+      html+='</div></div>';
+    } else {
+      html+='<div class="empty-state">No matches found — try different keywords</div>';
+    }
+    resultsEl.innerHTML=html;
+  } catch(e){
+    resultsEl.innerHTML='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="ai-text">Sorry, try again.</div></div>';
+  }
+  btn.disabled=false;btn.textContent='Search';
+}
+
+document.getElementById('query').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSearch();}
+});
+
+loadProperties();
+</script>
+</body>
+</html>
