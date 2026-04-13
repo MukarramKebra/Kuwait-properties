@@ -39,11 +39,6 @@ body { background: #0f0f0f; color: #fff; padding: 1rem; }
 .prop-tags { display: flex; gap: 4px; flex-wrap: wrap; }
 .tag { font-size: 11px; padding: 2px 7px; border-radius: 20px; background: #0F3D2E; color: #1D9E75; }
 .prop-location { font-size: 12px; color: #555; margin-top: 6px; }
-.typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; animation: bounce 1.2s infinite; }
-.dot:nth-child(2) { animation-delay: 0.2s; }
-.dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%,80%,100%{transform:translateY(0);opacity:0.4}40%{transform:translateY(-5px);opacity:1} }
 .empty-state { text-align: center; padding: 2rem; color: #555; font-size: 14px; }
 .section-label { font-size: 13px; font-weight: 500; color: #888; margin-bottom: 8px; }
 .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; margin-right: 5px; vertical-align: middle; }
@@ -62,10 +57,10 @@ body { background: #0f0f0f; color: #fff; padding: 1rem; }
     <textarea id="query" placeholder="e.g. 3-bedroom apartment in Salmiya under 450 KD, near the sea..."></textarea>
     <div class="search-actions">
       <div class="quick-chips">
-        <span class="chip" onclick="fillChip('Budget apartment under 300 KD')">Budget apartment</span>
-        <span class="chip" onclick="fillChip('Luxury villa with pool')">Luxury villa</span>
-        <span class="chip" onclick="fillChip('Studio for single expat')">Studio</span>
-        <span class="chip" onclick="fillChip('Family apartment sea view')">Sea view family</span>
+        <span class="chip" onclick="fillChip('budget apartment under 300')">Budget apartment</span>
+        <span class="chip" onclick="fillChip('luxury villa pool')">Luxury villa</span>
+        <span class="chip" onclick="fillChip('studio expat furnished')">Studio</span>
+        <span class="chip" onclick="fillChip('sea view family apartment')">Sea view family</span>
       </div>
       <button class="send-btn" id="searchBtn" onclick="doSearch()">Search</button>
     </div>
@@ -92,7 +87,6 @@ body { background: #0f0f0f; color: #fff; padding: 1rem; }
 <script>
 const SUPABASE_URL='https://qhebhvllkovfbkqrcnmm.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFoZWJodmxsa292ZmJrcXJjbm1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNTgwMTksImV4cCI6MjA5MTYzNDAxOX0.AQl5WAB1_ma3zcrkW4NFKk6oCKBUlTthD68ujcSlnas';
-const GEMINI_KEY='AIzaSyBiAxZ1dDhLjrAuu53-z1D6gA9C_bXK0_U';
 let PROPERTIES=[];
 
 async function loadProperties(){
@@ -105,7 +99,7 @@ async function loadProperties(){
     if(Array.isArray(data)&&data.length>0){
       PROPERTIES=data.map(p=>({...p,tags:p.tags?p.tags.split(','):[]}));
       document.getElementById('status-text').innerHTML='<span class="status-dot"></span>Live — '+PROPERTIES.length+' properties loaded';
-      document.getElementById('results').innerHTML='<div class="empty-state">Describe your ideal property above and the AI will find matches for you</div>';
+      document.getElementById('results').innerHTML='<div class="empty-state">Describe your ideal property above to find matches</div>';
     } else {
       document.getElementById('status-text').textContent='Connected — no properties yet';
       document.getElementById('results').innerHTML='<div class="empty-state">No listings yet.</div>';
@@ -118,45 +112,74 @@ async function loadProperties(){
 
 function fillChip(t){document.getElementById('query').value=t;}
 
-async function doSearch(){
+function smartSearch(query, properties){
+  const q=query.toLowerCase();
+  const words=q.split(/\s+/);
+  const scored=properties.map(p=>{
+    let score=0;
+    const searchable=(p.title+' '+p.area+' '+p.type+' '+p.purpose+' '+(p.tags||[]).join(' ')+' '+p.beds+' bed').toLowerCase();
+    words.forEach(w=>{
+      if(w.length<2) return;
+      if(searchable.includes(w)) score+=2;
+      if(p.area&&p.area.toLowerCase().includes(w)) score+=3;
+      if(p.type&&p.type.toLowerCase().includes(w)) score+=2;
+      if(w==='studio'&&p.beds===0) score+=4;
+      if((w==='villa')&&p.type==='Villa') score+=4;
+      if((w==='apartment')&&p.type==='Apartment') score+=3;
+      if(w==='sea'||w==='view') score+=(p.tags||[]).some(t=>t.toLowerCase().includes('sea')||t.toLowerCase().includes('view'))?3:0;
+      if(w==='pool') score+=(p.tags||[]).some(t=>t.toLowerCase().includes('pool'))?3:0;
+      if(w==='furnished') score+=(p.tags||[]).some(t=>t.toLowerCase().includes('furnished'))?3:0;
+      if(w==='pet') score+=(p.tags||[]).some(t=>t.toLowerCase().includes('pet'))?3:0;
+      if(w==='budget'||w==='cheap'||w==='affordable') score+=(p.tags||[]).some(t=>t.toLowerCase().includes('affordable'))?2:0;
+      if(w==='luxury') score+=(p.type==='Villa'||p.beds>=4)?2:0;
+      const numMatch=q.match(/(\d+)\s*(bed|bedroom|br)/);
+      if(numMatch&&p.beds==parseInt(numMatch[1])) score+=5;
+      const kdMatch=q.match(/under\s*(\d+)/);
+      if(kdMatch){
+        const maxPrice=parseInt(kdMatch[1]);
+        const propPrice=parseInt((p.price||'').replace(/[^\d]/g,''));
+        if(propPrice&&propPrice<=maxPrice) score+=4;
+        else if(propPrice&&propPrice>maxPrice) score-=3;
+      }
+    });
+    return{...p,score};
+  });
+  return scored.filter(p=>p.score>0).sort((a,b)=>b.score-a.score).slice(0,4);
+}
+
+function getAIMessage(query, results){
+  if(results.length===0) return "I couldn't find properties matching your search. Try different keywords or remove some filters.";
+  const areas=[...new Set(results.map(p=>p.area))].join(' and ');
+  const types=[...new Set(results.map(p=>p.type))].join(', ');
+  return `I found ${results.length} propert${results.length===1?'y':'ies'} matching your search in ${areas}. Here are the best matches for you!`;
+}
+
+function doSearch(){
   const q=document.getElementById('query').value.trim();
   const area=document.getElementById('area').value;
   const type=document.getElementById('type').value;
   const purpose=document.getElementById('purpose').value;
-  if(!q&&!area&&!type&&!purpose)return;
-  const btn=document.getElementById('searchBtn');
-  btn.disabled=true;btn.textContent='Searching...';
-  const resultsEl=document.getElementById('results');
-  resultsEl.innerHTML='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+  if(!q&&!area&&!type&&!purpose) return;
+
   let filtered=PROPERTIES;
-  if(area)filtered=filtered.filter(p=>p.area===area);
-  if(type)filtered=filtered.filter(p=>p.type===type);
-  if(purpose)filtered=filtered.filter(p=>p.purpose===purpose);
-  const prompt=`You are a Kuwait real estate assistant. User query: "${q}". Properties: ${JSON.stringify(filtered.map(p=>({id:p.id,title:p.title,area:p.area,type:p.type,purpose:p.purpose,beds:p.beds,tags:p.tags,price:p.price})))}. Respond with JSON only, no markdown: {"message":"1-2 sentence friendly response","property_ids":[up to 4 matching ids as numbers]}`;
-  try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+GEMINI_KEY,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+  if(area) filtered=filtered.filter(p=>p.area===area);
+  if(type) filtered=filtered.filter(p=>p.type===type);
+  if(purpose) filtered=filtered.filter(p=>p.purpose===purpose);
+
+  const matched=q?smartSearch(q,filtered):filtered.slice(0,4);
+  const message=getAIMessage(q,matched);
+
+  let html='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="ai-text">'+message+'</div></div>';
+  if(matched.length>0){
+    html+='<div><div class="section-label">'+matched.length+' properties found</div><div class="property-grid">';
+    matched.forEach(p=>{
+      html+='<div class="property-card"><div class="prop-img">'+(p.emoji||'🏢')+'</div><div class="prop-body"><div class="prop-price">'+p.price+' <span>'+(p.period||'')+'</span></div><div class="prop-title">'+p.title+'</div><div class="prop-tags">'+(p.tags||[]).map(t=>'<span class="tag">'+t.trim()+'</span>').join('')+'</div><div class="prop-location">'+p.area+' · '+(p.beds?p.beds+' bed':'Studio')+' · '+p.sqm+' m²</div></div></div>';
     });
-    const data=await res.json();
-    const raw=data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(raw);
-    const matched=parsed.property_ids.map(id=>PROPERTIES.find(p=>p.id==id)).filter(Boolean);
-    let html='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="ai-text">'+parsed.message+'</div></div>';
-    if(matched.length>0){
-      html+='<div><div class="section-label">'+matched.length+' properties found</div><div class="property-grid">';
-      matched.forEach(p=>{
-        html+='<div class="property-card"><div class="prop-img">'+(p.emoji||'🏢')+'</div><div class="prop-body"><div class="prop-price">'+p.price+' <span>'+(p.period||'')+'</span></div><div class="prop-title">'+p.title+'</div><div class="prop-tags">'+(p.tags||[]).map(t=>'<span class="tag">'+t.trim()+'</span>').join('')+'</div><div class="prop-location">'+p.area+' · '+(p.beds?p.beds+' bed':'Studio')+' · '+p.sqm+' m²</div></div></div>';
-      });
-      html+='</div></div>';
-    } else {
-      html+='<div class="empty-state">No matches found — try different keywords</div>';
-    }
-    resultsEl.innerHTML=html;
-  } catch(e){
-    resultsEl.innerHTML='<div class="ai-bubble"><div class="ai-label">AI Assistant</div><div class="ai-text">Sorry, try again.</div></div>';
+    html+='</div></div>';
+  } else {
+    html+='<div class="empty-state">No matches found — try different keywords or remove filters</div>';
   }
-  btn.disabled=false;btn.textContent='Search';
+  document.getElementById('results').innerHTML=html;
 }
 
 document.getElementById('query').addEventListener('keydown',e=>{
